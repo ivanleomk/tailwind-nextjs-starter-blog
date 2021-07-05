@@ -34,7 +34,6 @@ export async function getStaticProps({ params }) {
 
 export default function Blog({ post, prev, next }) {
   const { mdxSource, frontMatter } = post
-
   return (
     <>
       {frontMatter.draft !== true ? (
