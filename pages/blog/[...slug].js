@@ -19,10 +19,20 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }) {
-  const allPosts = await getAllFilesFrontMatter('blog')
+  let allPosts = await getAllFilesFrontMatter('blog')
   const postIndex = allPosts.findIndex((post) => formatSlug(post.slug) === params.slug.join('/'))
-  const prev = allPosts[postIndex + 1] || null
-  const next = allPosts[postIndex - 1] || null
+  const tmp = allPosts[postIndex]
+
+  if (tmp) {
+    if (tmp.tags.includes('Book Review')) {
+      allPosts = allPosts.filter((item) => item.tags.includes('Book Review'))
+    } else {
+      allPosts = allPosts.filter((item) => !item.tags.includes('Book Review'))
+    }
+  }
+
+  const prev = allPosts.length > 1 ? allPosts[postIndex + 1] || null : null
+  const next = allPosts.length > 1 ? allPosts[postIndex - 1] || null : null
   const post = await getFileBySlug('blog', params.slug.join('/'))
 
   // rss
